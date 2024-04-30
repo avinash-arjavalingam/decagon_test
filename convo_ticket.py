@@ -3,8 +3,8 @@ from openai_helper import query_conversation, OutputTypes
 from linear import run_linear_graphql_query, run_linear_graphql_mutation
 
 
-API_KEY = "<Insert Here>"
-OPEN_AI_KEY = "<Insert Here>"
+API_KEY = '<INSERT VALUE HERE>'
+OPEN_AI_KEY =  '<INSERT VALUE HERE>'
 
 def convert_conversation_to_ticket(user_text: str):
   classification_prompt = f"""
@@ -64,12 +64,15 @@ def convert_conversation_to_ticket(user_text: str):
     elif response_type == OutputTypes.BUG.value:
       label_id = json.dumps([label_type['id'] for label_type in label_types if label_type['name'] == str(OutputTypes.BUG)])
 
+
+    user_text = json.dumps(f"{response['summary']} \n\n\n Full text: \n\n\n {user_text}")
+
     ticket_info = f"""
     {{
       issueCreate(
         input: {{
           title: "{response['title']}"
-          description: "{response['summary']} \n Full text: \n {user_text}"
+          description: {user_text}
           teamId: "{teams_id}"
           labelIds: {label_id}
         }}
