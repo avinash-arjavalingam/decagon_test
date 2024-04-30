@@ -1,0 +1,12 @@
+User: Hello, I encountered a bug while using CloudNote.
+
+Support: Oh no, I'm sorry to hear that. Could you please provide more details about the issue you're experiencing?
+
+User: Of course. So, whenever I try to save a new note, I'm getting an error message saying "Error saving note. Please try again later." It's happening consistently, and I've tried refreshing the page and logging out and back in, but the issue persists.
+
+Support: Thank you for letting us know about this issue. It sounds like there might be a problem with the note-saving functionality. Have you noticed if this happens with specific types of notes or under certain conditions?
+
+User: I've tried saving both short and long notes, and it happens every time regardless of the content. It seems to occur no matter what device or browser I'm using as well.
+
+Support: Got it, thanks for the additional information. We'll investigate this further on our end to see what's causing the issue. In the meantime, if you have any other questions or encounter any other issues, please don't hesitate to reach out.
+
