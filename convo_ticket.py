@@ -69,7 +69,7 @@ def convert_conversation_to_ticket(user_text: str):
       issueCreate(
         input: {{
           title: "{response['title']}"
-          description: "{response['summary']}"
+          description: "{response['summary']} \n Full text: \n {user_text}"
           teamId: "{teams_id}"
           labelIds: {label_id}
         }}
