@@ -14,8 +14,8 @@ def convert_conversation_to_ticket(user_text: str):
   """
 
   ticket_type = None
-  response = query_conversation(classification_prompt, OPEN_AI_KEY)
-  response_type = response['type']
+  class_response = query_conversation(classification_prompt, OPEN_AI_KEY)
+  response_type = class_response['type']
   if response_type == OutputTypes.FEATURE.value:
     ticket_type = 'feature request'
   elif response_type == OutputTypes.BUG.value:
@@ -25,6 +25,34 @@ def convert_conversation_to_ticket(user_text: str):
       return f"Conversation was not one of: {output_type_strs}"
 
   if ticket_type:
+    issues_info = f"""
+    {{
+      issues {{
+        nodes {{
+          id
+          title
+          description
+        }}
+      }}
+    }}
+    """
+
+    issues_present = json.dumps(run_linear_graphql_query(issues_info, API_KEY)['data']['issues']['nodes'])
+
+    issues_overlap_prompt = f"""
+    Between the three backticks is a json blob containing the information of the current tickets
+    ```{issues_present} ```.
+    Between the next three pluses is the current text that we are considering
+    +++{user_text}+++.
+    Determine if the information in the current text is has already generally been recorded in any of the current tickets.
+    Provide the output only in a JSON format where the key is "provided", and the value is either 0 for False (the information is novel) or 1 for True (one or more of the tickets already contains the information of the current text)
+    """
+
+    overlap_response = query_conversation(issues_overlap_prompt, OPEN_AI_KEY)
+    provided = bool(overlap_response['provided'])
+    if provided:
+      return "Did not create a new ticket, as it was determined the information is already present in the current backlog"
+
     summary_prompt = f"""
     For the purposes of making a JIRA-like ticket, write a title and a summary of the text between the three backticks
     ```{user_text} ```
